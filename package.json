@@ -21,11 +21,13 @@
       "sql": "^0.78.0",
       "ts-node": "^10.9.1",
       "typeorm": "0.3.10",
+      "typeorm-seeding": "^1.6.1",
       "zod": "^3.19.1"
    },
    "scripts": {
       "dev": "nodemon --exec 'ts-node --cache-directory .tscache' ./app/app.ts",
       "start": "npx nodemon src/app.ts",
-      "typeorm": "typeorm-ts-node-commonjs"
+      "typeorm": "typeorm-ts-node-commonjs",
+      "seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"
    }
 }
