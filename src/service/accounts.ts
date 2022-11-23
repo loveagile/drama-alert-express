@@ -11,6 +11,15 @@ export const getAllAccounts = async () => {
   }
 }
 
+export const getAccountByUrl = async (url: string) => {
+  try {
+    const account = await Account.findOne({ where: { urlname: url } })
+    return { account }
+  } catch (error) {
+    throw error
+  }
+}
+
 export const createAccount = async (account: AccountType) => {
   try {
     const newAccount = (await AppDataSource.manager.save(

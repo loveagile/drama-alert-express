@@ -5,7 +5,11 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 import { UserType } from '../utils/types'
-import { getAllAccounts, createAccount } from '../service/accounts'
+import {
+  getAllAccounts,
+  getAccountByUrl,
+  createAccount,
+} from '../service/accounts'
 import { getErrorMessage } from '../utils/errors'
 
 export interface CustomRequest extends Request {
@@ -22,6 +26,16 @@ export const getAccounts = async (req: Request, res: Response) => {
   }
 }
 
+export const getAccount = async (req: Request, res: Response) => {
+  try {
+    const url = req.params.url
+    const account = await getAccountByUrl(url)
+    return res.status(200).send(account)
+  } catch (error) {
+    return res.status(500).send(getErrorMessage(error))
+  }
+}
+
 export const addAccount = async (req: CustomRequest, res: Response) => {
   try {
     if (req.user.role !== 'admin') {
@@ -30,6 +44,9 @@ export const addAccount = async (req: CustomRequest, res: Response) => {
     const form = new formidable.IncomingForm()
     let account, file
     form.parse(req, (err, fields, files) => {
+      if (err) {
+        return res.status(500).send(getErrorMessage(err))
+      }
       account = { ...fields }
       account.urlname = fields.fullname.split(' ').join('').toLowerCase()
       const { photo, image } = files
@@ -41,7 +58,7 @@ export const addAccount = async (req: CustomRequest, res: Response) => {
 
       fs.writeFile(newPath, rawData, async (err) => {
         if (err) {
-          return res.status(500).json({ err })
+          return res.status(500).json(getErrorMessage(err))
         }
         if (image) {
           oldPath = image.filepath
@@ -51,7 +68,7 @@ export const addAccount = async (req: CustomRequest, res: Response) => {
           account.image = file
           fs.writeFile(newPath, rawData, async (err) => {
             if (err) {
-              return res.status(500).json({ err })
+              return res.status(500).json(getErrorMessage(err))
             }
             const newAccount = await createAccount(account)
             res.status(200).send({ account: newAccount })
