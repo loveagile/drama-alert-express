@@ -18,17 +18,29 @@ export class Account extends Model {
   title: string
 
   @Column()
+  video: string
+
+  @Column()
+  video_content: string
+
+  @Column()
+  image: string
+
+  @Column()
+  image_content: string
+
+  @Column({ nullable: true })
   facebook: string
 
-  @Column()
+  @Column({ nullable: true })
   twitter: string
 
-  @Column()
+  @Column({ nullable: true })
   youtube: string
 
-  @Column()
+  @Column({ nullable: true })
   instagram: string
 
-  @Column({ default: () => true })
+  @Column({ default: true })
   show: boolean
 }

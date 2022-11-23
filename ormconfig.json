@@ -16,5 +16,6 @@
    ], 
    "cli": { 
       "entitiesDir": "src/entity", "migrationsDir": "src/migration", "subscribersDir": "src/subscriber" 
-   } 
+   },
+   "seeds": ["src/db/seeds/**/*{.ts,.js}"]
 }
