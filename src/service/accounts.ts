@@ -5,7 +5,7 @@ import { AccountType } from '../utils/types'
 export const getAllAccounts = async () => {
   try {
     const accounts = await Account.find()
-    return { accounts }
+    return accounts
   } catch (error) {
     throw error
   }
@@ -14,7 +14,7 @@ export const getAllAccounts = async () => {
 export const getAccountByUrl = async (url: string) => {
   try {
     const account = await Account.findOne({ where: { urlname: url } })
-    return { account }
+    return account
   } catch (error) {
     throw error
   }
@@ -25,7 +25,21 @@ export const createAccount = async (account: AccountType) => {
     const newAccount = (await AppDataSource.manager.save(
       AppDataSource.manager.create(Account, account)
     )) as Account
-    return { account: newAccount }
+    return newAccount
+  } catch (error) {
+    throw error
+  }
+}
+
+export const updateAccount = async (account: AccountType) => {
+  try {
+    const updatedAccount = await AppDataSource.manager.save(
+      AppDataSource.createQueryBuilder()
+        .update(Account)
+        .set(account)
+        .where({ urlname: account.urlname })
+    )
+    return updatedAccount
   } catch (error) {
     throw error
   }
