@@ -1,13 +1,16 @@
 import { Request, Response } from 'express'
 import { JwtPayload } from 'jsonwebtoken'
+import * as formidable from 'formidable'
+import * as fs from 'fs'
+import * as path from 'path'
 
-import { User } from '../utils/types'
+import { UserType } from '../utils/types'
 import { getAllAccounts, createAccount } from '../service/accounts'
 import { getErrorMessage } from '../utils/errors'
 
 export interface CustomRequest extends Request {
   token: string | JwtPayload
-  user: User
+  user: UserType
 }
 
 export const getAccounts = async (req: Request, res: Response) => {
@@ -24,10 +27,41 @@ export const addAccount = async (req: CustomRequest, res: Response) => {
     if (req.user.role !== 'admin') {
       return res.status(403).send({ message: 'No authentication' })
     }
-    const urlname = req.body.fullname.split(' ').join('').toLowerCase()
-    const account = { ...req.body, urlname }
-    const newAccount = await createAccount(account)
-    return res.status(200).send({ account: newAccount })
+    const form = new formidable.IncomingForm()
+    let account, file
+    form.parse(req, (err, fields, files) => {
+      account = { ...fields }
+      account.urlname = fields.fullname.split(' ').join('').toLowerCase()
+      const { photo, image } = files
+      let oldPath = photo.filepath
+      let newPath = path.join('./public/photos/') + photo.originalFilename
+      file = newPath
+      let rawData = fs.readFileSync(oldPath)
+      account.photo = file
+
+      fs.writeFile(newPath, rawData, async (err) => {
+        if (err) {
+          return res.status(500).json({ err })
+        }
+        if (image) {
+          oldPath = image.filepath
+          newPath = path.join('./public/images/') + image.originalFilename
+          file = newPath
+          rawData = fs.readFileSync(oldPath)
+          account.image = file
+          fs.writeFile(newPath, rawData, async (err) => {
+            if (err) {
+              return res.status(500).json({ err })
+            }
+            const newAccount = await createAccount(account)
+            res.status(200).send({ account: newAccount })
+          })
+        } else {
+          const newAccount = await createAccount(account)
+          res.status(200).send({ account: newAccount })
+        }
+      })
+    })
   } catch (error) {
     return res.status(500).send(getErrorMessage(error))
   }

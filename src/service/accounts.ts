@@ -1,21 +1,6 @@
 import { Account } from '../entity/Account'
 import { AppDataSource } from '../utils/data-source'
-
-interface accountType {
-  fullname: string
-  photo: string
-  title: string
-  urlname: string
-  video: string
-  video_content: string
-  image: string
-  image_content: string
-  facebook: string
-  twitter: string
-  youtube: string
-  instagram: string
-  show: boolean
-}
+import { AccountType } from '../utils/types'
 
 export const getAllAccounts = async () => {
   try {
@@ -26,7 +11,7 @@ export const getAllAccounts = async () => {
   }
 }
 
-export const createAccount = async (account: accountType) => {
+export const createAccount = async (account: AccountType) => {
   try {
     const newAccount = (await AppDataSource.manager.save(
       AppDataSource.manager.create(Account, account)

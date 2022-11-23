@@ -4,6 +4,7 @@ node_modules/
 build/
 tmp/
 temp/
+public/
 .env
 package-lock.json
 yarn.lock
