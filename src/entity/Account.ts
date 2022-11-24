@@ -1,4 +1,6 @@
-import { Entity, Column, Index } from 'typeorm'
+import { Entity, Column, Index, OneToMany, JoinTable } from 'typeorm'
+import { Achievement } from './Achievement'
+import { Comment } from './Comment'
 
 import Model from './Model'
 
@@ -41,6 +43,14 @@ export class Account extends Model {
   @Column({ nullable: true })
   instagram: string
 
-  @Column({ default: true })
+  @Column('boolean', { default: true })
   show: boolean
+
+  @OneToMany(() => Achievement, (achievement) => achievement.account)
+  @JoinTable()
+  achievements: Achievement[]
+
+  @OneToMany(() => Comment, (comment) => comment.account)
+  @JoinTable()
+  comments: Comment[]
 }

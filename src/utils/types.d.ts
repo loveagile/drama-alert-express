@@ -19,3 +19,14 @@ export interface AccountType {
   instagram: string
   show: boolean
 }
+
+export interface CommentType {
+  content: string
+  user_id: any
+  account_id: any
+}
+
+export interface AchievementType {
+  content: string
+  account_id: any
+}
