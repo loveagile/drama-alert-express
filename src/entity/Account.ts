@@ -41,6 +41,6 @@ export class Account extends Model {
   @Column({ nullable: true })
   instagram: string
 
-  @Column({ default: true })
+  @Column('boolean', { default: true })
   show: boolean
 }

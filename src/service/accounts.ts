@@ -31,15 +31,26 @@ export const createAccount = async (account: AccountType) => {
   }
 }
 
-export const updateAccount = async (account: AccountType) => {
+export const updateAccount = async (url: string, obj: object) => {
   try {
-    const updatedAccount = await AppDataSource.manager.save(
-      AppDataSource.createQueryBuilder()
-        .update(Account)
-        .set(account)
-        .where({ urlname: account.urlname })
+    const account = await getAccountByUrl(url)
+    AppDataSource.getRepository(Account).merge(account, obj)
+    const updatedAccount = await AppDataSource.getRepository(Account).save(
+      account
     )
     return updatedAccount
+  } catch (error) {
+    throw error
+  }
+}
+
+export const removeAccount = async (url: string) => {
+  try {
+    await AppDataSource.createQueryBuilder()
+      .delete()
+      .from(Account)
+      .where({ urlname: url })
+      .execute()
   } catch (error) {
     throw error
   }

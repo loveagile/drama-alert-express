@@ -10,6 +10,7 @@ import {
   getAccountByUrl,
   createAccount,
   updateAccount,
+  removeAccount,
 } from '../service/accounts'
 import { getErrorMessage } from '../utils/errors'
 
@@ -93,7 +94,6 @@ export const editAccount = async (req: CustomRequest, res: Response) => {
     }
     const form = new formidable.IncomingForm()
     const url = req.params.url
-    const oldAccount = await getAccountByUrl(url)
 
     let account, file
     form.parse(req, async (err, fields, files) => {
@@ -104,14 +104,13 @@ export const editAccount = async (req: CustomRequest, res: Response) => {
       if (account.fullname) {
         account.urlname = fields.fullname.split(' ').join('').toLowerCase()
       }
-      const newAccount = Object.assign(oldAccount, account)
       const { photo, image } = files
       if (photo) {
         const oldPath = photo.filepath
         const newPath = path.join('./public/photos/') + photo.originalFilename
         file = newPath
         const rawData = fs.readFileSync(oldPath)
-        newAccount.photo = file
+        account.photo = file
 
         await fs.writeFile(newPath, rawData, async (err) => {
           if (err) {
@@ -124,16 +123,27 @@ export const editAccount = async (req: CustomRequest, res: Response) => {
         const newPath = path.join('./public/images/') + image.originalFilename
         file = newPath
         const rawData = fs.readFileSync(oldPath)
-        newAccount.image = file
+        account.image = file
+
         await fs.writeFile(newPath, rawData, async (err) => {
           if (err) {
             return res.status(500).json(getErrorMessage(err))
           }
         })
       }
-      const savedAccount = await createAccount(newAccount)
+      const savedAccount = await updateAccount(url, account)
       res.status(200).send({ account: savedAccount })
     })
+  } catch (error) {
+    return res.status(500).send(getErrorMessage(error))
+  }
+}
+
+export const deleteAccount = async (req: Request, res: Response) => {
+  try {
+    const url = req.params.url
+    await removeAccount(url)
+    res.status(204).send({ success: true })
   } catch (error) {
     return res.status(500).send(getErrorMessage(error))
   }
