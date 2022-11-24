@@ -13,6 +13,7 @@ import {
   removeAccount,
 } from '../service/accounts'
 import { getErrorMessage } from '../utils/errors'
+import { getAllComments } from '../service/comments'
 
 export interface CustomRequest extends Request {
   token: string | JwtPayload
@@ -32,7 +33,8 @@ export const getAccount = async (req: Request, res: Response) => {
   try {
     const url = req.params.url
     const account = await getAccountByUrl(url)
-    return res.status(200).send({ account })
+    const comments = await getAllComments(account)
+    return res.status(200).send({ account, comments })
   } catch (error) {
     return res.status(500).send(getErrorMessage(error))
   }
