@@ -6,6 +6,7 @@ import { AppDataSource } from './utils/data-source'
 import auth from './routes/auth'
 import accounts from './routes/accounts'
 import comments from './routes/comments'
+import achievements from './routes/achievements'
 
 const options: cors.CorsOptions = {
   allowedHeaders: [
@@ -34,6 +35,7 @@ AppDataSource.initialize()
     app.use('/api/auth', auth)
     app.use('/api/accounts', accounts)
     app.use('/api/comments', comments)
+    app.use('/api/achievements', achievements)
 
     app.listen(port, () =>
       console.log(`REST API server ready at: http://localhost:${port}`)

@@ -14,6 +14,7 @@ import {
 } from '../service/accounts'
 import { getErrorMessage } from '../utils/errors'
 import { getAllComments } from '../service/comments'
+import { getAllAchievements } from '../service/achievements'
 
 export interface CustomRequest extends Request {
   token: string | JwtPayload
@@ -34,7 +35,8 @@ export const getAccount = async (req: Request, res: Response) => {
     const url = req.params.url
     const account = await getAccountByUrl(url)
     const comments = await getAllComments(account)
-    return res.status(200).send({ account, comments })
+    const achievements = await getAllAchievements(account)
+    return res.status(200).send({ account, comments, achievements })
   } catch (error) {
     return res.status(500).send(getErrorMessage(error))
   }

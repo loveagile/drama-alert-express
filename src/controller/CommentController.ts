@@ -1,11 +1,8 @@
 import { Request, Response } from 'express'
 
-import { Comment } from '../entity/Comment'
 import { User } from '../entity/User'
 import { Account } from '../entity/Account'
 import { createComment } from '../service/comments'
-import { findUser } from '../service/user'
-import { getAccountByUrl } from '../service/accounts'
 import { getErrorMessage } from '../utils/errors'
 import { CommentType } from '../utils/types'
 
