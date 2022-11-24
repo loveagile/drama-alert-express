@@ -2,9 +2,12 @@ import { AppDataSource } from '../utils/data-source'
 import { Comment } from '../entity/Comment'
 import { CommentType } from '../utils/types'
 
-export const getAllComments = async (account_id: any) => {
+export const getAllComments = async (account: any) => {
   try {
-    const comments = await Comment.find({ where: { account_id: account_id } })
+    const comments = await Comment.find({
+      relations: ['user'],
+      where: { account_id: account.id },
+    })
     return comments
   } catch (error) {
     throw error

@@ -1,7 +1,15 @@
-import { Entity, Column, Index, BeforeInsert } from 'typeorm'
+import {
+  Entity,
+  Column,
+  Index,
+  BeforeInsert,
+  OneToMany,
+  JoinTable,
+} from 'typeorm'
 import * as bcrypt from 'bcryptjs'
 
 import Model from './Model'
+import { Comment } from './Comment'
 
 export enum RoleEnumType {
   USER = 'user',
@@ -29,6 +37,10 @@ export class User extends Model {
     default: RoleEnumType.USER,
   })
   role: RoleEnumType.USER
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  @JoinTable()
+  comments: Comment[]
 
   @BeforeInsert()
   async hashPassword() {

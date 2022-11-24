@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, JoinTable } from 'typeorm'
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm'
 
 import Model from './Model'
 import { Account } from './Account'
@@ -8,9 +8,15 @@ export class Achievement extends Model {
   @Column()
   content: string
 
-  @ManyToOne((type) => Account, {
-    cascade: true,
-  })
-  @JoinTable()
-  account_id: Account
+  @Column()
+  account_id: number
+
+  @ManyToOne(
+    () => Account,
+    (account) => {
+      account.achievements
+    }
+  )
+  @JoinColumn({ name: 'account_id' })
+  account: Account
 }

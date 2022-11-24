@@ -4,11 +4,9 @@ import { AchievementType } from '../utils/types'
 
 export const getAllAchievements = async (account: any) => {
   try {
-    const achievements = await AppDataSource.getRepository(Achievement)
-      .createQueryBuilder('achievements')
-      .leftJoin('achievements.account', 'account')
-      .getMany()
-
+    const achievements = await Achievement.find({
+      where: { account_id: account.id },
+    })
     return achievements
   } catch (error) {
     throw error
