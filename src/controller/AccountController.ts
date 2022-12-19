@@ -55,7 +55,7 @@ export const addAccount = async (req: CustomRequest, res: Response) => {
       }
       account = { ...fields }
       account.urlname = fields.fullname.split(' ').join('').toLowerCase()
-      const { photo, image, video_priview } = files
+      const { photo, image, video_preview } = files
       if (photo) {
         const oldPath = photo.filepath
         const newPath = path.join('./public/photos/') + photo.originalFilename
@@ -82,13 +82,13 @@ export const addAccount = async (req: CustomRequest, res: Response) => {
           }
         })
       }
-      if (video_priview) {
-        const oldPath = video_priview.filepath
+      if (video_preview) {
+        const oldPath = video_preview.filepath
         const newPath =
-          path.join('./public/images/') + video_priview.originalFilename
-        file = path.join('images/') + video_priview.originalFilename
+          path.join('./public/images/') + video_preview.originalFilename
+        file = path.join('images/') + video_preview.originalFilename
         const rawData = fs.readFileSync(oldPath)
-        account.video_priview = file
+        account.video_preview = file
 
         await fs.writeFile(newPath, rawData, async (err) => {
           if (err) {
