@@ -11,7 +11,7 @@ export default abstract class Model extends BaseEntity {
   }
 
   @PrimaryGeneratedColumn()
-  id: string
+  id: number
 
   @CreateDateColumn()
   created_at: Date

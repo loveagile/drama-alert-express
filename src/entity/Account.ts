@@ -19,14 +19,23 @@ export class Account extends Model {
   @Column()
   title: string
 
-  @Column()
+  @Column({ nullable: true })
   video: string
+
+  @Column({ nullable: true })
+  video_title: string
+
+  @Column({ nullable: true })
+  video_preview: string
 
   @Column()
   video_content: string
 
-  @Column()
+  @Column({ nullable: true })
   image: string
+
+  @Column({ nullable: true })
+  image_title: string
 
   @Column()
   image_content: string
@@ -42,6 +51,12 @@ export class Account extends Model {
 
   @Column({ nullable: true })
   instagram: string
+
+  @Column({ nullable: true })
+  tiktok: string
+
+  @Column({ nullable: false })
+  country: string
 
   @Column('boolean', { default: true })
   show: boolean

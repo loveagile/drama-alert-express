@@ -31,6 +31,9 @@ export class User extends Model {
   @Column()
   username: string
 
+  @Column()
+  photo: string
+
   @Column({
     type: 'enum',
     enum: RoleEnumType,
