@@ -10,7 +10,7 @@ export class UserController {
   }
 
   async one(req: Request, res: Response, next: NextFunction) {
-    return this.userRepository.findOne({ where: { id: req.params.id } })
+    return this.userRepository.findOne({ where: { id: Number(req.params.id) } })
   }
 
   async save(req: Request, res: Response, next: NextFunction) {
@@ -19,7 +19,7 @@ export class UserController {
 
   async remove(req: Request, res: Response, next: NextFunction) {
     let userToRemove = await this.userRepository.findOne({
-      where: { id: req.params.id },
+      where: { id: Number(req.params.id) },
     })
     await this.userRepository.remove(userToRemove)
   }

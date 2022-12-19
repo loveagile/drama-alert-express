@@ -7,17 +7,22 @@ export interface UserType {
 export interface AccountType {
   fullname: string
   photo: string
+  country: string
   title: string
   urlname: string
-  video: string
-  video_content: string
-  image: string
-  image_content: string
-  facebook: string
-  twitter: string
-  youtube: string
-  instagram: string
-  show: boolean
+  video?: string
+  video_title?: string
+  video_preview?: string
+  video_content?: string
+  image?: string
+  image_title?: string
+  image_content?: string
+  facebook?: string
+  twitter?: string
+  youtube?: string
+  instagram?: string
+  tiKtok?: string
+  show?: boolean
 }
 
 export interface CommentType {

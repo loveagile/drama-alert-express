@@ -1,20 +1,23 @@
 import { Request, Response } from 'express'
+import { JwtPayload } from 'jsonwebtoken'
 
-import { User } from '../entity/User'
-import { Account } from '../entity/Account'
 import { createComment } from '../service/comments'
 import { getErrorMessage } from '../utils/errors'
-import { CommentType } from '../utils/types'
+import { UserType, CommentType } from '../utils/types'
 
-export const addComment = async (req: Request, res: Response) => {
+export interface CustomRequest extends Request {
+  token: string | JwtPayload
+  user: UserType
+}
+
+export const addComment = async (req: CustomRequest, res: Response) => {
   try {
-    const { content, user_id, account_id } = req.body
-    const user = await User.findOne({ where: { id: user_id } })
-    const account = await Account.findOne({ where: { id: account_id } })
+    const { content, account_id } = req.body
+    const user = req.user
     const comment: CommentType = {
       content: content,
-      user_id: user,
-      account_id: account,
+      user_id: user?.id,
+      account_id: account_id,
     }
     const newComment = await createComment(comment)
     return res.status(200).json({ comment: newComment })

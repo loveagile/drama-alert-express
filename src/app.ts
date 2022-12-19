@@ -8,25 +8,11 @@ import accounts from './routes/accounts'
 import comments from './routes/comments'
 import achievements from './routes/achievements'
 
-const options: cors.CorsOptions = {
-  allowedHeaders: [
-    'Origin',
-    'X-Requested-With',
-    'Content-Type',
-    'Accept',
-    'X-Access-Token',
-  ],
-  credentials: true,
-  methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-  origin: 'http://localhost:3002',
-  preflightContinue: false,
-}
-
 AppDataSource.initialize()
   .then(async () => {
     const app = express()
     const port = process.env.PORT || 4002
-    app.use(cors(options))
+    app.use(cors())
     app.use(express.static('public'))
     app.use(express.json())
     app.use(bodyParser.urlencoded({ extended: true }))

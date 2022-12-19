@@ -55,11 +55,11 @@ export const addAccount = async (req: CustomRequest, res: Response) => {
       }
       account = { ...fields }
       account.urlname = fields.fullname.split(' ').join('').toLowerCase()
-      const { photo, image } = files
+      const { photo, image, video_priview } = files
       if (photo) {
         const oldPath = photo.filepath
         const newPath = path.join('./public/photos/') + photo.originalFilename
-        file = newPath
+        file = path.join('photos/') + photo.originalFilename
         const rawData = fs.readFileSync(oldPath)
         account.photo = file
 
@@ -69,11 +69,10 @@ export const addAccount = async (req: CustomRequest, res: Response) => {
           }
         })
       }
-
       if (image) {
         const oldPath = image.filepath
         const newPath = path.join('./public/images/') + image.originalFilename
-        file = newPath
+        file = path.join('images/') + image.originalFilename
         const rawData = fs.readFileSync(oldPath)
         account.image = file
 
@@ -83,8 +82,26 @@ export const addAccount = async (req: CustomRequest, res: Response) => {
           }
         })
       }
-      const newAccount = await createAccount(account)
-      res.status(200).send({ account: newAccount })
+      if (video_priview) {
+        const oldPath = video_priview.filepath
+        const newPath =
+          path.join('./public/images/') + video_priview.originalFilename
+        file = path.join('images/') + video_priview.originalFilename
+        const rawData = fs.readFileSync(oldPath)
+        account.video_priview = file
+
+        await fs.writeFile(newPath, rawData, async (err) => {
+          if (err) {
+            return res.status(500).json(getErrorMessage(err))
+          }
+        })
+      }
+      try {
+        const newAccount = await createAccount(account)
+        res.status(200).send({ account: newAccount })
+      } catch (error) {
+        return res.status(422).send({ success: false, error: error })
+      }
     })
   } catch (error) {
     return res.status(500).send(getErrorMessage(error))
@@ -108,11 +125,11 @@ export const editAccount = async (req: CustomRequest, res: Response) => {
       if (account.fullname) {
         account.urlname = fields.fullname.split(' ').join('').toLowerCase()
       }
-      const { photo, image } = files
+      const { photo, image, video_preview } = files
       if (photo) {
         const oldPath = photo.filepath
         const newPath = path.join('./public/photos/') + photo.originalFilename
-        file = newPath
+        file = path.join('photos/') + photo.originalFilename
         const rawData = fs.readFileSync(oldPath)
         account.photo = file
 
@@ -125,9 +142,23 @@ export const editAccount = async (req: CustomRequest, res: Response) => {
       if (image) {
         const oldPath = image.filepath
         const newPath = path.join('./public/images/') + image.originalFilename
-        file = newPath
+        file = path.join('images/') + image.originalFilename
         const rawData = fs.readFileSync(oldPath)
         account.image = file
+
+        await fs.writeFile(newPath, rawData, async (err) => {
+          if (err) {
+            return res.status(500).json(getErrorMessage(err))
+          }
+        })
+      }
+      if (video_preview) {
+        const oldPath = video_preview.filepath
+        const newPath =
+          path.join('./public/images/') + video_preview.originalFilename
+        file = path.join('images/') + video_preview.originalFilename
+        const rawData = fs.readFileSync(oldPath)
+        account.video_preview = file
 
         await fs.writeFile(newPath, rawData, async (err) => {
           if (err) {
