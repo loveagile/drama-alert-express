@@ -6,11 +6,13 @@
    "password": "", 
    "database": "drama_alert", 
    "synchronize": true, 
-   "logging": false, 
+   "logging": false,
+   "migrationsTableName": "migrations",
+   "name": "default",
    "entities": [
       "src/entity/**/*.ts" 
    ], 
-   "migrations": [ "src/migration/**/*.ts" 
+   "migrations": [ "src/migrations/**/*.ts" 
    ], 
    "subscribers": [ "src/subscriber/**/*.ts" 
    ], 
