@@ -61,11 +61,15 @@ export class Account extends Model {
   @Column('boolean', { default: true })
   show: boolean
 
-  @OneToMany(() => Achievement, (achievement) => achievement.account)
+  @OneToMany(() => Achievement, (achievement) => achievement.account, {
+    cascade: true,
+  })
   @JoinTable()
   achievements: Achievement[]
 
-  @OneToMany(() => Comment, (comment) => comment.account)
+  @OneToMany(() => Comment, (comment) => comment.account, {
+    cascade: true,
+  })
   @JoinTable()
   comments: Comment[]
 }
